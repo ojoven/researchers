@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class Disease extends Model {
 
-    /** GET LIST ILLNESSES **/
+    protected $fillable = array('name', 'wikipedia_url');
+
+    /** GET LIST DISEASES **/
     public function getListDiseases() {
 
         // Get the list of diseases
@@ -40,13 +42,23 @@ class Disease extends Model {
 
                     $linkDiseaseUrl = $linkDisease->getAttribute('href');
 
-                    echo $linkDiseaseUrl . '<br>';
+                    $hjey = strpos($linkDiseaseUrl, '#');
+
+                    if (strpos($linkDiseaseUrl, 'redlink') === false // Diseases without page in Wikipedia
+                        && strpos($linkDiseaseUrl, '#') === false // Indexes
+                        && strpos($linkDiseaseUrl, 'List_of_diseases') === false) { // Other category pages
+                        echo $urlBase . $linkDiseaseUrl . '<br>';
+
+                        self::create(array(
+                            'name' => $linkDisease->plaintext,
+                            'wikipedia_url' => $urlBase . $linkDiseaseUrl
+                        ));
+                    }
 
                 }
 
             }
 
-            return;
         }
 
     }
