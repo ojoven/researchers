@@ -1,0 +1,37 @@
+@charset "UTF-8";
+/* http://meyerweb.com/eric/tools/css/reset/
+v2.0 | 20110126
+License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, menu, nav, section { display: block; }
+
+body { line-height: 1; }
+
+ol, ul { list-style: none; }
+
+blockquote, q { quotes: none; }
+
+blockquote:before, blockquote:after { content: ''; content: none; }
+
+q:before, q:after { content: ''; content: none; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+.main-font, body { font-family: 'Raleway', sans-serif; }
+
+body { box-sizing: border-box; }
+
+#grid .option { -webkit-transition: background 0.3s ease-in-out; /* Chrome 1-25, Safari 3.2+ */ -moz-transition: background 0.3s ease-in-out; /* Firefox 4-15 */ -o-transition: background 0.3s ease-in-out; /* Opera 10.50–12.00 */ transition: background 0.3s ease-in-out; /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */ border: 1px solid #ccc; background: #fff; display: block; width: 20px; height: 20px; float: left; overflow: hidden; box-sizing: border-box; margin: -1px; padding: 0; }
+#grid .option:hover, #grid .option:focus { -webkit-transition: background 0.3s ease-in-out; /* Chrome 1-25, Safari 3.2+ */ -moz-transition: background 0.3s ease-in-out; /* Firefox 4-15 */ -o-transition: background 0.3s ease-in-out; /* Opera 10.50–12.00 */ transition: background 0.3s ease-in-out; /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */ background: #ccc; }
+
+#loader { background: url(../img/loader.gif) no-repeat 0 0; width: 48px; height: 48px; display: none; margin: 30px auto; }
+
+@media all and (max-width: 640px) { #subtitle { font-size: 11px; }
+  #search, #to-random-container, #results .single-header, #results .social-header, #results .result a { width: 100%; }
+  #results .film { width: 100%; box-sizing: border-box; padding: 10px 0; }
+  #results .film .left { width: 23%; }
+  #results .film .right { width: 70%; }
+  #results .film .right .cast, #results .film .right .title, #results .film .right .director { max-width: 100%; } }

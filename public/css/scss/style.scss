@@ -1,0 +1,39 @@
+@import 'partials/reset';
+@import 'partials/mixins';
+
+body {
+  @extend .main-font;
+  box-sizing: border-box;
+}
+
+#grid {
+
+  .option {
+    @include transition(background);
+    border: 1px solid #ccc;
+    background: #fff;
+    display: block;
+    width: 20px;
+    height: 20px;
+    float: left;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin: -1px;
+    padding: 0;
+    &:hover, &:focus {
+      @include transition(background);
+      background: #ccc;
+    }
+  }
+
+}
+
+#loader {
+  background: url(../img/loader.gif) no-repeat 0 0;
+  width: 48px;
+  height: 48px;
+  display: none;
+  margin: 30px auto;
+}
+
+@import 'queries/mobile';
