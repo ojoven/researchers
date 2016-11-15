@@ -17,6 +17,11 @@ class Research extends Model {
         $diseases = $diseaseModel->getListDiseases();
 
         // For each disease, we get the list of available researches
+        foreach ($diseases as $disease) {
+
+            // Call to API
+
+        }
 
         // For each element in the list
 

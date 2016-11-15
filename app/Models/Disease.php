@@ -14,8 +14,14 @@ class Disease extends Model {
     public function getListDiseases() {
 
         // Get the list of diseases
-        $diseases = $this->getListDiseasesFromWikipedia();
+        $diseases = self::get()->toArray();
+        if (!$diseases) {
 
+            // If yet not in the DB, we scrape them from Wikipedia
+            $diseases = $this->getListDiseasesFromWikipedia();
+        }
+
+        return $diseases;
 
     }
 
