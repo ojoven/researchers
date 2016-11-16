@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class Research extends Model {
 
+    protected $fillable = array('uid', 'pubdate', 'epubdate', 'lastauthor', 'title', 'sorttitle', 'volume', 'issue', 'pages', 'lang', 'nlmuniqueid', 'issn', 'essn',
+        'pubtype', 'recordstatus', 'pubstatus', 'attributes', 'pmcrefcount', 'fulljournalname', 'elocationid', 'doctype', 'booktitle', 'medium', 'edition',
+        'publisherlocation', 'publishername', 'srcdate', 'reportnumber', 'availablefromurl', 'locationlabel', 'docdate', 'bookname', 'chapter', 'sortpubdate',
+        'sortfirstauthor', 'vernaculartitle');
+
     /** UPDATE RESEARCHES **/
     public function updateResearches() {
 
@@ -18,7 +23,7 @@ class Research extends Model {
 
         $disease = 'Acanthosis nigricans';
         $pubMedAPIModel = new PubMedAPI();
-        $researches = $pubMedAPIModel->getNewResearchesDisease($disease);
+        $researches = $pubMedAPIModel->addNewResearchesDisease($disease);
 
         // For each disease, we get the list of available researches
         foreach ($diseases as $disease) {
