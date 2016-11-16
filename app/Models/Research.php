@@ -16,6 +16,10 @@ class Research extends Model {
         $diseaseModel = new Disease();
         $diseases = $diseaseModel->getListDiseases();
 
+        $disease = 'Acanthosis nigricans';
+        $pubMedAPIModel = new PubMedAPI();
+        $researches = $pubMedAPIModel->getNewResearchesDisease($disease);
+
         // For each disease, we get the list of available researches
         foreach ($diseases as $disease) {
 
