@@ -21,7 +21,9 @@ class Research extends Model {
         $diseaseModel = new Disease();
         $diseases = $diseaseModel->getListDiseases();
 
-        $disease = 'Acanthosis nigricans';
+        $disease['name'] = 'Acanthosis nigricans';
+        $disease['id'] = 21;
+
         $pubMedAPIModel = new PubMedAPI();
         $researches = $pubMedAPIModel->addNewResearchesDisease($disease);
 

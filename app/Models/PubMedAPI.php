@@ -16,8 +16,11 @@ class PubMedAPI extends Model {
     /** ADD NEW RESEARCHES **/
     public function addNewResearchesDisease($disease) {
 
+        $diseaseName = $disease['name'];
+
+        /**
         // Get all the research IDs from the API
-        $researchIds = $this->getResearchesDiseaseIds($disease);
+        $researchIds = $this->getResearchesDiseaseIds($diseaseName);
 
         // Get the previous researches to compare with
         $researchModel = new Research();
@@ -26,12 +29,15 @@ class PubMedAPI extends Model {
 
         // Extract the new ones (all - previous)
         $newResearchIds = array_diff($researchIds, $previousResearchIds);
+        **/
+
+        $newResearchIds = array('21738374');
 
         // Get new researches info
         $researches = $this->getResearchesInfoFromIds($newResearchIds);
 
         // Add researches into DB
-        $response = $this->addResearchesInfoToDB($researches);
+        $response = $this->addResearchesInfoToDB($researches, $disease);
 
         return $response;
 
@@ -60,6 +66,8 @@ class PubMedAPI extends Model {
 
             $newPageResearchIds = $this->getResearchesDiseaseIds($disease, $retstart);
             $researchIds = array_merge($researchIds, $newPageResearchIds);
+
+            return $researchIds;
 
         }
 
@@ -99,7 +107,7 @@ class PubMedAPI extends Model {
     }
 
     /** ADD RESEARCHES INFO TO DB **/
-    public function addResearchesInfoToDB($researches) {
+    public function addResearchesInfoToDB($researches, $disease) {
 
         $researchModel = new Research();
         foreach ($researches as $research) {
@@ -160,17 +168,28 @@ class PubMedAPI extends Model {
                 $researchAuthorModel->create($researchAuthorArray);
             }
 
-            // TODO: Other tables. Save JSON?
+            // Save relationship between research and disease
+            $researchDiseaseModel = new ResearchDisease();
+            $researchDiseaseArray = array(
+                'uid' => $research['uid'],
+                'disease_id' => $disease['id'],
+            );
 
-            // CHECK THE DOI!
+            $researchDiseaseModel->create($researchDiseaseArray);
 
-            // articleids
-            // history
-            // references
-            // srccontriblist
-            // doccontriblist
+            // Save relationship between research and articleids
+            $researchArticleIDModel = new ResearchArticleID();
+            foreach ($research['articleids'] as $articleID) {
+                $researchDiseaseArray = array(
+                    'uid' => $research['uid'],
+                    'idtype' => $articleID['idtype'],
+                    'idtypen' => $articleID['idtypen'],
+                    'value' => $articleID['value']
+                );
 
-            // TODO: Save relationship between research and disease!
+                $researchArticleIDModel->create($researchDiseaseArray);
+            }
+
 
             // TODO: Save abstracts! and author additional information!
 
