@@ -15,7 +15,8 @@
 Route::get('/', 'IndexController@index');
 
 // API calls
-Route::controller('api', 'ApiController');
+//Route::controller('api', 'ApiController');
+Route::get('api/updateResearches', 'ApiController@updateResearches');
 
 // Just a route example
 Route::get('a/{name}', 'IndexController@action');

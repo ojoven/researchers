@@ -18,7 +18,6 @@ class PubMedAPI extends Model {
 
         $diseaseName = $disease['name'];
 
-        /**
         // Get all the research IDs from the API
         $researchIds = $this->getResearchesDiseaseIds($diseaseName);
 
@@ -29,9 +28,6 @@ class PubMedAPI extends Model {
 
         // Extract the new ones (all - previous)
         $newResearchIds = array_diff($researchIds, $previousResearchIds);
-        **/
-
-        $newResearchIds = array('21738374');
 
         // Get new researches info
         $researches = $this->getResearchesInfoFromIds($newResearchIds);
@@ -51,27 +47,33 @@ class PubMedAPI extends Model {
 
         // Get the JSON and convert it to an array
         $url = $urlBase . '&retstart=' . $retstart . '&retmax=' . $this->researchesPerPage . '&term=' . urlencode($disease);
-        $jsonResponse = file_get_contents($url);
-        $response = json_decode($jsonResponse, true);
+        try {
+            $jsonResponse = file_get_contents($url);
+            $response = json_decode($jsonResponse, true);
 
-        if (!isset($response['esearchresult'])) return array(); // Error, no response
+            if (!isset($response['esearchresult'])) return array(); // Error, no response
 
-        // Get the research IDs from the response
-        $researchIds = $response['esearchresult']['idlist'];
+            // Get the research IDs from the response
+            $researchIds = $response['esearchresult']['idlist'];
 
-        // If there are more pages, we'll call to them
-        if ($response['esearchresult']['count'] > ($retstart + $this->researchesPerPage)) {
+            // If there are more pages, we'll call to them
+            if ($response['esearchresult']['count'] > ($retstart + $this->researchesPerPage)) {
 
-            $retstart = $retstart + $this->researchesPerPage;
+                $retstart = $retstart + $this->researchesPerPage;
 
-            $newPageResearchIds = $this->getResearchesDiseaseIds($disease, $retstart);
-            $researchIds = array_merge($researchIds, $newPageResearchIds);
+                $newPageResearchIds = $this->getResearchesDiseaseIds($disease, $retstart);
+                $researchIds = array_merge($researchIds, $newPageResearchIds);
+
+                return $researchIds;
+
+            }
 
             return $researchIds;
 
-        }
+        } catch (\Exception $e) {
 
-        return $researchIds;
+            return array();
+        }
 
     }
 

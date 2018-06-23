@@ -15,12 +15,14 @@ class Disease extends Model {
 
         // Get the list of diseases
         $diseases = self::get()->toArray();
-        if (!$diseases) {
+        return $diseases;
 
-            // If yet not in the DB, we scrape them from Wikipedia
-            $diseases = $this->getListDiseasesFromWikipedia();
-        }
+    }
 
+    public function getActiveDiseases() {
+
+        // Get the list of diseases
+        $diseases = self::where('active', true)->get()->toArray();
         return $diseases;
 
     }
@@ -66,6 +68,9 @@ class Disease extends Model {
             }
 
         }
+
+        // Return the diseases list from DB
+        return self::get()->toArray();
 
     }
 

@@ -15,8 +15,6 @@ class IndexController extends Controller {
 
     public function index() {
 
-        $researchModel = new Research();
-        $researchModel->updateResearches();
         return view('index');
 
     }

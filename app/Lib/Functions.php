@@ -16,4 +16,23 @@ class Functions {
 		return $subArray;
 	}
 
+	public static function getFileContentsRetryIfFail($url, $tries = 5) {
+
+		try {
+			$content = file_get_contents($url);
+			return $content;
+
+		} catch (\Exception $e) {
+
+			if ($tries > 0) {
+				sleep(5);
+				$tries = $tries - 1;
+				return self::getFileContentsRetryIfFail($url, $tries);
+			} else {
+				echo $e->getMessage();
+			}
+
+		}
+	}
+
 }

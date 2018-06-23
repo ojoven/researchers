@@ -19,18 +19,14 @@ class Research extends Model {
 
         // Get the list of diseases
         $diseaseModel = new Disease();
-        $diseases = $diseaseModel->getListDiseases();
-
-        $disease['name'] = 'Acanthosis nigricans';
-        $disease['id'] = 21;
+        $diseases = $diseaseModel->getActiveDiseases();
 
         $pubMedAPIModel = new PubMedAPI();
-        $researches = $pubMedAPIModel->addNewResearchesDisease($disease);
 
         // For each disease, we get the list of available researches
         foreach ($diseases as $disease) {
 
-            // Call to API
+            $researches = $pubMedAPIModel->addNewResearchesDisease($disease);
 
         }
 
