@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lib\Functions;
+use App\Models\Condition;
 use App\Models\Research;
 use App\Models\Result;
 use App\Models\Turn;
@@ -20,8 +21,6 @@ class IndexController extends Controller {
     }
 
     public function condition() {
-
-        $apiKey = config('settings.ncbiApiKey');
 
         return view('index');
     }

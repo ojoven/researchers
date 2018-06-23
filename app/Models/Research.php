@@ -30,7 +30,13 @@ class Research extends Model {
 
         }
 
-        // For each element in the list
+    }
+
+    /** GET RESEARCHES **/
+    public function getResearchesCondition($conditionId) {
+
+        $researchesCondition = ResearchCondition::where('condition_id', $conditionId);
+        self::where('')->get();
 
     }
 
