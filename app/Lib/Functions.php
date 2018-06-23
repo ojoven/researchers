@@ -30,6 +30,7 @@ class Functions {
 				return self::getFileContentsRetryIfFail($url, $tries);
 			} else {
 				echo $e->getMessage();
+				die('Error retrieving the URL');
 			}
 
 		}

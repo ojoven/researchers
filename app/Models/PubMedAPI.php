@@ -14,12 +14,12 @@ class PubMedAPI extends Model {
     protected $researchInfoChunks = 100;
 
     /** ADD NEW RESEARCHES **/
-    public function addNewResearchesDisease($disease) {
+    public function addNewResearchesCondition($condition) {
 
-        $diseaseName = $disease['name'];
+        $conditionName = $condition['name'];
 
         // Get all the research IDs from the API
-        $researchIds = $this->getResearchesDiseaseIds($diseaseName);
+        $researchIds = $this->getResearchesConditionIds($conditionName);
 
         // Get the previous researches to compare with
         $researchModel = new Research();
@@ -33,47 +33,42 @@ class PubMedAPI extends Model {
         $researches = $this->getResearchesInfoFromIds($newResearchIds);
 
         // Add researches into DB
-        $response = $this->addResearchesInfoToDB($researches, $disease);
+        $response = $this->addResearchesInfoToDB($researches, $condition);
 
         return $response;
 
     }
 
     /** GET RESEARCH IDS **/
-    public function getResearchesDiseaseIds($disease, $retstart = 0) {
+    public function getResearchesConditionIds($condition, $retstart = 0) {
 
         // URL to get the research IDs
         $urlBase = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json';
 
         // Get the JSON and convert it to an array
-        $url = $urlBase . '&retstart=' . $retstart . '&retmax=' . $this->researchesPerPage . '&term=' . urlencode($disease);
-        try {
-            $jsonResponse = file_get_contents($url);
-            $response = json_decode($jsonResponse, true);
+        $url = $urlBase . '&retstart=' . $retstart . '&retmax=' . $this->researchesPerPage . '&term=' . urlencode($condition);
+        $url .= '&api_key=' . config('settings.ncbiApiKey');
+        $jsonResponse = Functions::getFileContentsRetryIfFail($url);
+        $response = json_decode($jsonResponse, true);
 
-            if (!isset($response['esearchresult'])) return array(); // Error, no response
+        if (!isset($response['esearchresult'])) return array(); // Error, no response
 
-            // Get the research IDs from the response
-            $researchIds = $response['esearchresult']['idlist'];
+        // Get the research IDs from the response
+        $researchIds = $response['esearchresult']['idlist'];
 
-            // If there are more pages, we'll call to them
-            if ($response['esearchresult']['count'] > ($retstart + $this->researchesPerPage)) {
+        // If there are more pages, we'll call to them
+        if ($response['esearchresult']['count'] > ($retstart + $this->researchesPerPage)) {
 
-                $retstart = $retstart + $this->researchesPerPage;
+            $retstart = $retstart + $this->researchesPerPage;
 
-                $newPageResearchIds = $this->getResearchesDiseaseIds($disease, $retstart);
-                $researchIds = array_merge($researchIds, $newPageResearchIds);
-
-                return $researchIds;
-
-            }
+            $newPageResearchIds = $this->getResearchesConditionIds($condition, $retstart);
+            $researchIds = array_merge($researchIds, $newPageResearchIds);
 
             return $researchIds;
 
-        } catch (\Exception $e) {
-
-            return array();
         }
+
+        return $researchIds;
 
     }
 
@@ -91,7 +86,8 @@ class PubMedAPI extends Model {
 
             // Get the JSON and convert it to an array
             $url = $urlBase . implode(',', $chunk);
-            $jsonResponse = file_get_contents($url);
+            $url .= '&api_key=' . config('settings.ncbiApiKey');
+            $jsonResponse = Functions::getFileContentsRetryIfFail($url);
             $response = json_decode($jsonResponse, true);
 
             if (!isset($response['result'])) return array(); // Error, no response
@@ -109,7 +105,7 @@ class PubMedAPI extends Model {
     }
 
     /** ADD RESEARCHES INFO TO DB **/
-    public function addResearchesInfoToDB($researches, $disease) {
+    public function addResearchesInfoToDB($researches, $condition) {
 
         $researchModel = new Research();
         foreach ($researches as $research) {
@@ -170,26 +166,26 @@ class PubMedAPI extends Model {
                 $researchAuthorModel->create($researchAuthorArray);
             }
 
-            // Save relationship between research and disease
-            $researchDiseaseModel = new ResearchDisease();
-            $researchDiseaseArray = array(
+            // Save relationship between research and condition
+            $researchConditionModel = new ResearchCondition();
+            $researchConditionArray = array(
                 'uid' => $research['uid'],
-                'disease_id' => $disease['id'],
+                'condition_id' => $condition['id'],
             );
 
-            $researchDiseaseModel->create($researchDiseaseArray);
+            $researchConditionModel->create($researchConditionArray);
 
             // Save relationship between research and articleids
             $researchArticleIDModel = new ResearchArticleID();
             foreach ($research['articleids'] as $articleID) {
-                $researchDiseaseArray = array(
+                $researchConditionArray = array(
                     'uid' => $research['uid'],
                     'idtype' => $articleID['idtype'],
                     'idtypen' => $articleID['idtypen'],
                     'value' => $articleID['value']
                 );
 
-                $researchArticleIDModel->create($researchDiseaseArray);
+                $researchArticleIDModel->create($researchConditionArray);
             }
 
 

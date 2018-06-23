@@ -19,4 +19,11 @@ class IndexController extends Controller {
 
     }
 
+    public function condition() {
+
+        $apiKey = config('settings.ncbiApiKey');
+
+        return view('index');
+    }
+
 }

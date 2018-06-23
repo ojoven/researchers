@@ -19,4 +19,4 @@ Route::get('/', 'IndexController@index');
 Route::get('api/updateResearches', 'ApiController@updateResearches');
 
 // Just a route example
-Route::get('a/{name}', 'IndexController@action');
+Route::get('condition/{name}', 'IndexController@condition');
